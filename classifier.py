@@ -44,10 +44,17 @@ class Classifier:
         return 0
 
     def normalizeColumn(self, columnNumber):
-        """TODO: mając dany nr kolumny w self.data, dokonuje normalizacji wg Modified Standard Score"""
+        """TODO: 
+        1. mając dany nr kolumny w self.data, dokonuje normalizacji wg Modified Standard Score
+        2. zapisz medianę i odchylenie standardowe dla kolumny w self.medianAndDeviation"""
 
         pass
-
+        
+    def normalizeVector(self, v):
+        """Znormalizuj podany wektor mając daną medianę i odchylenie standardowe dla każdej kolumny"""
+        vector = list(v)
+        # TODO: wpisz kod
+        return vector
 
     def manhattan(self, vector1, vector2):
         """Zwraca odległość Manhattan między dwoma wektorami cech."""
