@@ -1,4 +1,6 @@
 ﻿##  Wzorowane na przykładzie Rona Zacharskiego
+from numpy import median, absolute
+from math import sqrt
 
 class Classifier:
 
@@ -35,26 +37,32 @@ class Classifier:
 
     def getMedian(self, alist):
         """TODO: zwraca medianę listy"""
-
-        return 0
+        medianList = median(alist)
+        return medianList
         
 
-    def getAbsoluteStandardDeviation(self, alist, median):
+    def getAbsoluteStandardDeviation(self, alist, medianList):
         """TODO: zwraca absolutne odchylenie standardowe listy od mediany"""
-        return 0
+        absoluteStandardDeviation = sum([absolute(x-medianList) for x in alist])/len(alist)
+        return absoluteStandardDeviation
 
     def normalizeColumn(self, columnNumber):
-        """TODO: 
-        1. mając dany nr kolumny w self.data, dokonuje normalizacji wg Modified Standard Score
-        2. zapisz medianę i odchylenie standardowe dla kolumny w self.medianAndDeviation"""
-
+        """TODO: mając dany nr kolumny w self.data, dokonuje normalizacji wg Modified Standard Score"""
+        col = [v[1][columnNumber] for v in self.data]
+        medianList = self.getMedian(col)
+        absoluteStandardDeviation = self.getAbsoluteStandardDeviation(col, medianList)
+        self.medianAndDeviation.append((medianList, absoluteStandardDeviation))
+        for v in self.data:
+            v[1][columnNumber] = (v[1][columnNumber] - medianList) / absoluteStandardDeviation
         pass
-        
+
     def normalizeVector(self, v):
-        """Znormalizuj podany wektor mając daną medianę i odchylenie standardowe dla każdej kolumny"""
         vector = list(v)
-        # TODO: wpisz kod
+        for i in range(len(vector)):
+            (medianList, absoluteStandardDeviation) = self.medianAndDeviation[i]
+            vector[i] = (vector[i] - medianList) / absoluteStandardDeviation
         return vector
+    
 
     def manhattan(self, vector1, vector2):
         """Zwraca odległość Manhattan między dwoma wektorami cech."""
@@ -64,7 +72,8 @@ class Classifier:
     def nearestNeighbor(self, itemVector):
         """return nearest neighbor to itemVector"""
         
-        return ((0, ("TODO: Zwróc najbliższego sąsiada", [0], [])))
+        return min([ (self.manhattan(itemVector, item[1]), item)
+                     for item in self.data])
     
     def classify(self, itemVector):
         """Return class we think item Vector is in"""
@@ -193,6 +202,6 @@ def test(training_filename, test_filename):
 #  test("mpgTrainingSet.txt", "mpgTestSet.txt")
 
 testMedianAndASD()
-# testNormalization()
-# testClassifier()
+testNormalization()
+testClassifier()
 
